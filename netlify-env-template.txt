@@ -1,0 +1,20 @@
+# Netlify Environment Variables Template
+# Copy these to your Netlify site settings > Environment variables
+
+# Database (Required - Get from Neon, Supabase, or Railway)
+DATABASE_URL=postgresql://username:password@host:port/database?sslmode=require
+
+# Authentication (Required)
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production-make-it-long-and-random
+SESSION_SECRET=your-session-secret-key-change-this-in-production-make-it-long-and-random
+
+# Admin Credentials (Required)
+ADMIN_EMAIL=admin@scout.event
+ADMIN_PASSWORD=Scout2025Admin!
+
+# OpenAI API (Optional - for AI features)
+OPENAI_API_KEY=your-openai-api-key-here
+
+# Next.js Configuration
+NEXT_TELEMETRY_DISABLED=1
+NODE_ENV=production

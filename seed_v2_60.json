@@ -1,0 +1,265 @@
+{
+  "event": {
+    "id": "evt_ai_scouts_v2_60",
+    "name": "AI Scouts Online Rally — 60‑minute Track",
+    "isOpen": false,
+    "leaderboardVisibility": "ADMIN_ONLY"
+  },
+  "activities": [
+    {
+      "id": "act_v2_s1_pattern_hunt",
+      "eventId": "evt_ai_scouts_v2_60",
+      "title": "Sprint 1 — Pattern Hunt (Supervised Learning)",
+      "description": "10 minutes. Spot patterns from examples: spam vs not, and model basics.",
+      "order": 1,
+      "isFrozen": true,
+      "questions": [
+        { "id": "q_v2_s1_01", "type": "MCQ",
+          "prompt": { "text": "SMS: 'Free gift! Click bit.ly/xy now' — Spam or Not?" },
+          "options": ["Spam","Not Spam"], "points": 3,
+          "aiAnswerKey": { "correctIndex": 0 },
+          "aiExplanation": { "kind": "decisionRule", "ruleText": "Contains link + urgent free offer → Spam", "oneLiner": "Link + free offer → Spam" }
+        },
+        { "id": "q_v2_s1_02", "type": "MCQ",
+          "prompt": { "text": "SMS: 'Meeting at 10am. Bring notebook.' — Spam or Not?" },
+          "options": ["Spam","Not Spam"], "points": 3,
+          "aiAnswerKey": { "correctIndex": 1 },
+          "aiExplanation": { "kind": "decisionRule", "ruleText": "No shady link or urgent prize", "oneLiner": "Normal message → Not Spam" }
+        },
+        { "id": "q_v2_s1_03", "type": "MCQ",
+          "prompt": { "text": "Which features best help detect spam?" },
+          "options": ["Prize keywords","Weekly calendar words","Teacher names","Dates of exams"],
+          "points": 3,
+          "aiAnswerKey": { "correctIndex": 0 },
+          "aiExplanation": { "kind": "concept", "oneLiner": "Prize terms signal spam." }
+        },
+        { "id": "q_v2_s1_04", "type": "MCQ",
+          "prompt": { "text": "You trained on 100 school messages. On new data accuracy drops. Why?" },
+          "options": ["Overfitting","Bug in test","Too many classes","Labels vanished"],
+          "points": 4,
+          "aiAnswerKey": { "correctIndex": 0 },
+          "aiExplanation": { "kind": "concept", "oneLiner": "Memorized training set." }
+        },
+        { "id": "q_v2_s1_05", "type": "MCQ",
+          "prompt": { "text": "Best split strategy?" },
+          "options": ["Train/Test split","Train only","Test only","Shuffle labels"],
+          "points": 3,
+          "aiAnswerKey": { "correctIndex": 0 },
+          "aiExplanation": { "kind": "concept", "oneLiner": "Need unseen test set." }
+        },
+        { "id": "q_v2_s1_06", "type": "MCQ",
+          "prompt": { "text": "Email: 'Urgent! Verify bank account now: http://…'" },
+          "options": ["Spam","Not Spam"], "points": 3,
+          "aiAnswerKey": { "correctIndex": 0 },
+          "aiExplanation": { "kind": "decisionRule", "ruleText": "Urgency + bank + link → Spam", "oneLiner": "Urgent bank link → Spam" }
+        },
+        { "id": "q_v2_s1_07", "type": "MCQ",
+          "prompt": { "text": "What improves generalization?" },
+          "options": ["More diverse data","Less data","Remove test set","Memorize rules"],
+          "points": 3,
+          "aiAnswerKey": { "correctIndex": 0 },
+          "aiExplanation": { "kind": "concept", "oneLiner": "Variety helps generalize." }
+        },
+        { "id": "q_v2_s1_08", "type": "MCQ",
+          "prompt": { "text": "A student adds 'FREE' weight 10×. Likely effect?" },
+          "options": ["Bias toward Spam","Perfect balance","Less accuracy","No change"],
+          "points": 3,
+          "aiAnswerKey": { "correctIndex": 0 },
+          "aiExplanation": { "kind": "concept", "oneLiner": "Overweights spam term." }
+        },
+        { "id": "q_v2_s1_09", "type": "MCQ",
+          "prompt": { "text": "Key idea of supervised learning?" },
+          "options": ["Learn from labeled examples","Guess randomly","Hide labels","Delete features"],
+          "points": 3,
+          "aiAnswerKey": { "correctIndex": 0 },
+          "aiExplanation": { "kind": "concept", "oneLiner": "Use labeled examples." }
+        }
+      ]
+    },
+    {
+      "id": "act_v2_s2_reward_runner",
+      "eventId": "evt_ai_scouts_v2_60",
+      "title": "Sprint 2 — Reward Runner (Reinforcement Learning)",
+      "description": "20 minutes. Plan a drone path: reach safely with best total reward.",
+      "order": 2,
+      "isFrozen": true,
+      "questions": [
+        { "id": "q_v2_s2_01", "type": "MCQ",
+          "prompt": { "text": "Drone must reach hospital fast. Fewest steps ignoring no‑fly zones?", "gridHint": { "rows": 5, "cols": 5, "start": [5,1], "goal": [1,5] } },
+          "options": [7,8,9,10], "points": 5,
+          "aiAnswerKey": { "correctIndex": 1 },
+          "aiExplanation": { "kind": "math", "oneLiner": "4 up + 4 right = 8." }
+        },
+        { "id": "q_v2_s2_02", "type": "MCQ",
+          "prompt": { "text": "Reward: goal +10, step −1, no‑fly penalty −5. Path: 9 steps, no penalty. Total?" },
+          "options": [-1,0,1,2], "points": 5,
+          "aiAnswerKey": { "correctIndex": 2 },
+          "aiExplanation": { "kind": "math", "oneLiner": "+10 − 9 = +1." }
+        },
+        { "id": "q_v2_s2_03", "type": "GRID_PATH",
+          "prompt": {
+            "gridSize": [5,5], "start": [5,1], "goal": [1,5],
+            "water": [[2,3],[3,2],[4,4],[2,5]],
+            "stepCost": -1, "goalReward": 10, "waterPenalty": -5
+          },
+          "points": 10,
+          "aiAnswerKey": { "type": "GRID_PATH", "optimalPath": "U,U,U,U,R,R,R,R", "optimalSteps": 8, "optimalReward": 2 },
+          "aiExplanation": { "kind": "pathOverlay", "optimalPath": "U,U,U,U,R,R,R,R", "math": "Total = +10 − 8 = +2" }
+        },
+        { "id": "q_v2_s2_04", "type": "MCQ",
+          "prompt": { "text": "Two deliveries: (+1 then +2), (+2 then 0), (−1 then +2), (−2 then −1). Best sum?" },
+          "options": [
+            "+3",
+            "+2",
+            "+1",
+            "−3"
+          ],
+          "points": 5,
+          "aiAnswerKey": { "correctIndex": 0 },
+          "aiExplanation": { "kind": "math", "oneLiner": "+3 is highest total." }
+        }
+      ]
+    },
+    {
+      "id": "act_v2_s3_bias_detective",
+      "eventId": "evt_ai_scouts_v2_60",
+      "title": "Sprint 3 — Bias & Data Detective",
+      "description": "10 minutes. Spot imbalance and confounding; choose fixes that improve fairness.",
+      "order": 3,
+      "isFrozen": true,
+      "questions": [
+        { "id": "q_v2_s3_01", "type": "TRUE_FALSE", "prompt": { "text": "Admissions dataset: 80% City A, 20% City B. Balanced?" }, "points": 2,
+          "aiAnswerKey": { "correct": false },
+          "aiExplanation": { "kind": "fairnessPanel", "datasetSketch": {"cityA":80,"cityB":20}, "oneLiner": "Imbalanced cities." }
+        },
+        { "id": "q_v2_s3_02", "type": "TRUE_FALSE", "prompt": { "text": "Most City B students apply for night courses only. Confounding risk?" }, "points": 2,
+          "aiAnswerKey": { "correct": true }, "aiExplanation": { "kind": "concept", "oneLiner": "City tied to course." }
+        },
+        { "id": "q_v2_s3_03", "type": "TRUE_FALSE", "prompt": { "text": "Model might learn 'city' instead of 'merit'." }, "points": 2,
+          "aiAnswerKey": { "correct": true }, "aiExplanation": { "kind": "concept", "oneLiner": "Spurious city feature." }
+        },
+        { "id": "q_v2_s3_04", "type": "TRUE_FALSE", "prompt": { "text": "Adding only City A applicants fixes fairness." }, "points": 2,
+          "aiAnswerKey": { "correct": false }, "aiExplanation": { "kind": "concept", "oneLiner": "Need City B data too." }
+        },
+        { "id": "q_v2_s3_05", "type": "TRUE_FALSE", "prompt": { "text": "Stratified split by city helps evaluation." }, "points": 2,
+          "aiAnswerKey": { "correct": true }, "aiExplanation": { "kind": "concept", "oneLiner": "Keeps proportions." }
+        },
+        { "id": "q_v2_s3_06", "type": "TRUE_FALSE", "prompt": { "text": "Check subgroup accuracy (City A vs City B)." }, "points": 2,
+          "aiAnswerKey": { "correct": true }, "aiExplanation": { "kind": "concept", "oneLiner": "Find hidden gaps." }
+        },
+        { "id": "q_v2_s3_07", "type": "TRUE_FALSE", "prompt": { "text": "Low City B accuracy means labels are wrong." }, "points": 2,
+          "aiAnswerKey": { "correct": false }, "aiExplanation": { "kind": "concept", "oneLiner": "Likely imbalance." }
+        },
+        { "id": "q_v2_s3_08", "type": "TRUE_FALSE", "prompt": { "text": "Class weighting can reduce imbalance harm." }, "points": 2,
+          "aiAnswerKey": { "correct": true }, "aiExplanation": { "kind": "concept", "oneLiner": "Weight minority class." }
+        },
+        { "id": "q_v2_s3_09", "type": "CHECKBOX",
+          "prompt": { "text": "Pick the best fixes (choose exactly 3)." },
+          "options": [
+            "Collect more City B applications",
+            "Balance classes or reweight",
+            "Evaluate by city subgroup",
+            "Drop all City A records",
+            "Train longer only",
+            "Hide the test set"
+          ],
+          "points": 9,
+          "aiAnswerKey": { "correctSet": [0,1,2], "grading": "exact" },
+          "aiExplanation": { "kind": "fairnessPanel", "issues": ["imbalance","confounding"], "whyFixes": ["More minority data","Balance classes","Check subgroups"] }
+        }
+      ]
+    },
+    {
+      "id": "act_v2_s4_reality_check",
+      "eventId": "evt_ai_scouts_v2_60",
+      "title": "Sprint 4 — Reality Check (Deepfakes & Safety)",
+      "description": "20 minutes. Spot red flags; choose safe actions for online claims.",
+      "order": 4,
+      "isFrozen": true,
+      "questions": [
+        { "id": "q_v2_s4_01", "type": "MCQ",
+          "prompt": { "text": "Video: famous person, odd blinking, lip sync off. Real?" },
+          "options": ["Real","Uncertain","Likely Fake"], "points": 2,
+          "aiAnswerKey": { "correctIndex": 2 },
+          "aiExplanation": { "kind": "redFlags", "flags": ["lip sync off","rare blinks","no source"], "principle": "C — Check sources" }
+        },
+        { "id": "q_v2_s4_02", "type": "MCQ",
+          "prompt": { "text": "Best action for that video?" },
+          "options": [
+            "Verify via official sources/news; don’t forward",
+            "Share quickly to warn friends",
+            "Ignore all videos",
+            "Download and edit"
+          ],
+          "points": 3,
+          "aiAnswerKey": { "correctIndex": 0 },
+          "aiExplanation": { "kind": "safety", "oneLiner": "Verify first; avoid spreading." }
+        },
+        { "id": "q_v2_s4_03", "type": "MCQ",
+          "prompt": { "text": "Voice note: 'big storm tomorrow—share now!' with no source/date." },
+          "options": ["Real","Uncertain","Likely Fake/Misinformation"],
+          "points": 2,
+          "aiAnswerKey": { "correctIndex": 2 },
+          "aiExplanation": { "kind": "redFlags", "flags": ["urgency","no source","no date"], "principle": "C — Check sources" }
+        },
+        { "id": "q_v2_s4_04", "type": "MCQ",
+          "prompt": { "text": "Best action for the voice note?" },
+          "options": [
+            "Check a trusted weather authority; don’t forward",
+            "Forward to everyone",
+            "Delete without checking",
+            "Ask friends in chat"
+          ],
+          "points": 3,
+          "aiAnswerKey": { "correctIndex": 0 },
+          "aiExplanation": { "kind": "safety", "oneLiner": "Check official info." }
+        },
+        { "id": "q_v2_s4_05", "type": "MCQ",
+          "prompt": { "text": "Scholarship message asks fees first via random link." },
+          "options": ["Real","Uncertain","Likely Scam"],
+          "points": 2,
+          "aiAnswerKey": { "correctIndex": 2 },
+          "aiExplanation": { "kind": "credibility", "clues": ["fees first","random link"], "principle": "C — Check sources" }
+        },
+        { "id": "q_v2_s4_06", "type": "MCQ",
+          "prompt": { "text": "Best action for that scholarship claim?" },
+          "options": [
+            "Check official site or school notice",
+            "Pay quickly to reserve seat",
+            "Share widely",
+            "Upload personal data"
+          ],
+          "points": 3,
+          "aiAnswerKey": { "correctIndex": 0 },
+          "aiExplanation": { "kind": "privacy", "oneLiner": "Use trusted sources only." }
+        },
+        { "id": "q_v2_s4_07", "type": "MCQ",
+          "prompt": { "text": "Donation link appears after a disaster; page has no contacts." },
+          "options": ["Trust immediately","Verify first","Ignore all donations"],
+          "points": 2,
+          "aiAnswerKey": { "correctIndex": 1 },
+          "aiExplanation": { "kind": "credibility", "clues": ["no contacts","no registration"], "principle": "C — Check sources" }
+        },
+        { "id": "q_v2_s4_08", "type": "MCQ",
+          "prompt": { "text": "Best way to verify the donation page?" },
+          "options": [
+            "Check registered org / official channels",
+            "Look at number of shares only",
+            "Ask random comments",
+            "Click pop‑up ads"
+          ],
+          "points": 3,
+          "aiAnswerKey": { "correctIndex": 0 },
+          "aiExplanation": { "kind": "safety", "oneLiner": "Use official registries." }
+        },
+        { "id": "q_v2_s4_09", "type": "MCQ",
+          "prompt": { "text": "Which SCOUT rule is about verifying before sharing?" },
+          "options": ["S — Share carefully","C — Check sources","O — Obey rules","U — Use AI to learn","T — Think impact"],
+          "points": 5,
+          "aiAnswerKey": { "correctIndex": 1 },
+          "aiExplanation": { "kind": "concept", "oneLiner": "C — Check sources." }
+        }
+      ]
+    }
+  ]
+}

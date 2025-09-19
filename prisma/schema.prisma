@@ -1,0 +1,118 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  TEAM
+  ADMIN
+}
+
+enum LeaderboardVisibility {
+  ADMIN_ONLY
+  TEAMS
+}
+
+enum ActivityType {
+  MCQ
+  CHECKBOX
+  TRUE_FALSE
+  GRID_PATH
+}
+
+model User {
+  id           String   @id @default(cuid())
+  role         Role
+  email        String?  @unique // Admin only (Teams don't need email)
+  passwordHash String?  // Admin only
+  createdAt    DateTime @default(now())
+  Team         Team?
+}
+
+model Team {
+  id          String       @id @default(cuid())
+  code        String       @unique // e.g., A-01
+  displayName String
+  userId      String       @unique
+  user        User         @relation(fields: [userId], references: [id])
+  submissions Submission[]
+  scores      Score[]
+  createdAt   DateTime     @default(now())
+}
+
+model Event {
+  id                    String                @id @default(cuid())
+  name                  String
+  isOpen                Boolean               @default(false)
+  leaderboardVisibility LeaderboardVisibility @default(ADMIN_ONLY)
+  activities            Activity[]
+  scores                Score[]
+  createdAt             DateTime              @default(now())
+}
+
+model Activity {
+  id          String       @id @default(cuid())
+  eventId     String
+  event       Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  title       String
+  description String
+  order       Int          // 1..4 for the four sprints
+  questions   Question[]
+  submissions Submission[]
+  // "frozen" after AI generation to keep a fair contest
+  isFrozen    Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+}
+
+model Question {
+  id            String       @id @default(cuid())
+  activityId    String
+  activity      Activity     @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  type          ActivityType
+  prompt        Json         // Rich text / markdown
+  options       Json?        // for MCQ/CHECKBOX/TRUE_FALSE (array of options)
+  points        Int
+  // AI-generated canonical key & explanation payload:
+  aiAnswerKey   Json?        // shape varies by type; see examples below
+  aiExplanation Json?        // structured data for visualizations
+  order         Int          @default(0)
+  createdAt     DateTime     @default(now())
+}
+
+model Submission {
+  id         String   @id @default(cuid())
+  teamId     String
+  team       Team     @relation(fields: [teamId], references: [id])
+  activityId String
+  activity   Activity @relation(fields: [activityId], references: [id])
+  answers    Json     // { questionId: userAnswerPayload }
+  score      Int
+  createdAt  DateTime @default(now())
+
+  @@unique([teamId, activityId])
+}
+
+model Score {
+  id        String   @id @default(cuid())
+  teamId    String
+  team      Team     @relation(fields: [teamId], references: [id])
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id])
+  total     Int      @default(0)
+  updatedAt DateTime @updatedAt
+
+  @@unique([teamId, eventId])
+}
+
+model Config {
+  id       Int   @id @default(1)
+  branding Json?
+  rules    Json?
+}

@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: scout_event_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: scout_event
+    ports:
+      - "5432:5432"
+    volumes:
+      - scout_event_data:/var/lib/postgresql/data
+
+volumes:
+  scout_event_data:
